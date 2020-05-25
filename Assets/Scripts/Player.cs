@@ -15,8 +15,17 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
-        rb2D.velocity = new Vector2(gravity, 0);
+        Vector2 vec = new Vector2(gravity,0);
+        rb2D.AddForce(vec);
         if (Input.GetMouseButtonDown(0) && grounded)
+        {
+            grounded = false;
+            gravity *= -1;
+        }
+    }
+    public void Button()
+    {
+        if (grounded)
         {
             grounded = false;
             gravity *= -1;
