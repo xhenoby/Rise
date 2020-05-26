@@ -5,30 +5,35 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public bool changeGravity,grounded;
+    public bool changeGravity,grounded,start;
     private Rigidbody2D rb2D;
-    public float gravity;
+    public float xvelocity,yvelocity,jumpforce;
+    Vector2 vec,vac;
     void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
-        rb2D.velocity = new Vector2(1f, 0);
+        vec = new Vector2(0, 0);
+        start = false;
     }
     void Update()
     {
-        Vector2 vec = new Vector2(gravity,0);
-        rb2D.AddForce(vec);
-        if (Input.GetMouseButtonDown(0) && grounded)
+        if (grounded)
         {
-            grounded = false;
-            gravity *= -1;
+           rb2D.velocity = (vec);
         }
+
+
     }
     public void Button()
     {
         if (grounded)
         {
             grounded = false;
-            gravity *= -1;
+            xvelocity *= -1;
+            vec = new Vector2(-xvelocity, yvelocity);
+            vac = new Vector2(0, jumpforce);
+            rb2D.velocity = new Vector2(-xvelocity, 0);
+            rb2D.AddForce(vac);
         }
     }
 
