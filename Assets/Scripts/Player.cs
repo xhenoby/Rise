@@ -7,8 +7,9 @@ public class Player : MonoBehaviour
 {
     public bool changeGravity,grounded,start;
     private Rigidbody2D rb2D;
-    public float xvelocity,yvelocity,jumpforce;
+    public float xvelocity,yvelocity,TiempoVelocidad,VelocidadLimite;
     public ParticleSystem salto;
+    private float jumpforce,temporizador;
     Vector2 vec,vac;
     void Start()
     {
@@ -22,7 +23,23 @@ public class Player : MonoBehaviour
         {
            rb2D.velocity = (vec);
         }
-
+        jumpforce =yvelocity*650/10;
+        if (temporizador < 0)
+        {
+            if (yvelocity < 30)
+            {
+                yvelocity *= 1.1f;
+            }
+            else
+            {
+                yvelocity = VelocidadLimite;
+            }
+            temporizador = TiempoVelocidad;
+        }
+        else
+        {
+            temporizador -= Time.deltaTime;
+        }
 
     }
     public void Button()
