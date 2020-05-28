@@ -5609,7 +5609,8 @@ MonoBehaviour:
   start: 0
   xvelocity: 15
   yvelocity: 10
-  jumpforce: 650
+  TiempoVelocidad: 10
+  VelocidadLimite: 30
   salto: {fileID: 73352007}
 --- !u!61 &1941133637
 BoxCollider2D:
