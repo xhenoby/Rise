@@ -22,6 +22,10 @@ public class Player : MonoBehaviour
     [Header("Player Sounds")] 
     public AudioClip player_death;
     public AudioClip player_currency;
+    public AudioClip player_Jump1;
+    public AudioClip player_Jump2;
+
+    private AudioClip RandomJump;
     void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
@@ -59,9 +63,20 @@ public class Player : MonoBehaviour
             uiManager.UpdateScoreUI(score, scoreMts);
         }
     }
-    
+
     public void Button()
     {
+        int jum = UnityEngine.Random.Range(0,2);
+        if (jum == 0)
+        {
+            RandomJump = player_Jump1;
+        }
+        else
+        {
+            RandomJump = player_Jump2;
+
+        }
+
         if (grounded && !dead)
         {
             grounded = false;
@@ -70,6 +85,8 @@ public class Player : MonoBehaviour
             vac = new Vector2(0, jumpforce);
             rb2D.velocity = new Vector2(-xvelocity, 0);
             rb2D.AddForce(vac);
+            aS.PlayOneShot(RandomJump);
+            salto.transform.localEulerAngles *= -1;
             salto.Play();
         }
     }
