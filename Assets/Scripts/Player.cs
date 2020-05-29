@@ -5,21 +5,33 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public ControladorDeUI uiManager;
     public bool changeGravity,grounded,start;
     private Rigidbody2D rb2D;
     public float xvelocity,yvelocity,TiempoVelocidad,VelocidadLimite;
     public ParticleSystem salto;
+    private AudioSource aS;
     private float jumpforce,temporizador;
     Vector2 vec,vac;
+
+    private int score;
+    private int scoreMts;
+    
+    [HideInInspector] public bool dead = false;
+    
+    [Header("Player Sounds")] 
+    public AudioClip player_death;
+    public AudioClip player_currency;
     void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
         vec = new Vector2(0, 0);
         start = false;
+        aS = GetComponent<AudioSource>();
     }
     void FixedUpdate()
     {
-        if (grounded)
+        if (grounded && !dead)
         {
            rb2D.velocity = (vec);
         }
@@ -40,11 +52,17 @@ public class Player : MonoBehaviour
         {
             temporizador -= Time.deltaTime;
         }
-
+        
+        if (!dead)
+        {
+            scoreMts = Mathf.FloorToInt(transform.position.y)+9;
+            uiManager.UpdateScoreUI(score, scoreMts);
+        }
     }
+    
     public void Button()
     {
-        if (grounded)
+        if (grounded && !dead)
         {
             grounded = false;
             xvelocity *= -1;
@@ -56,19 +74,39 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void Kill()
+    {
+        if (!dead)
+        {
+            dead = true;
+            ChangePitchToNormal();
+            aS.PlayOneShot(player_death);
+            uiManager.Gameover();
+        }
+    }
+
+    public void GrabCoin()
+    {
+        if (!dead)
+        {
+            CancelInvoke("ChangePitchToNormal");
+            aS.pitch += 0.1f;
+            aS.PlayOneShot(player_currency);
+            score += 1;
+            Invoke("ChangePitchToNormal", 1.0f);
+        }
+    }
+
+    public void ChangePitchToNormal()
+    {
+        aS.pitch = 1;
+    }
+
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.transform.CompareTag("Wall"))
         {
             grounded = true;
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.name == "Object")
-        {
-            Debug.Log("Object hit");
         }
     }
 }
