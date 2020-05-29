@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Player : MonoBehaviour
 {
@@ -11,8 +12,16 @@ public class Player : MonoBehaviour
     public float xvelocity,yvelocity,TiempoVelocidad,VelocidadLimite;
     public ParticleSystem salto;
     private AudioSource aS;
+    private AudioSource aS2;
     private float jumpforce,temporizador;
     Vector2 vec,vac;
+
+    private Animator anim;
+    private GameObject playerModel;
+    private bool walking;
+    private bool jumping;
+    private bool started;
+    private bool side;
 
     private int score;
     private int scoreMts;
@@ -28,10 +37,13 @@ public class Player : MonoBehaviour
     private AudioClip RandomJump;
     void Start()
     {
+        playerModel = transform.GetChild(0).gameObject;
+        anim = playerModel.GetComponent<Animator>();
         rb2D = GetComponent<Rigidbody2D>();
         vec = new Vector2(0, 0);
         start = false;
-        aS = GetComponent<AudioSource>();
+        aS = GetComponents<AudioSource>()[0];
+        aS2 = GetComponents<AudioSource>()[1];
     }
     void FixedUpdate()
     {
@@ -77,15 +89,26 @@ public class Player : MonoBehaviour
 
         }
 
+        if (!started)
+        {
+            started = true;
+            anim.SetBool("started", started);
+            playerModel.transform.DOLocalRotate(new Vector3(-90, 90, 0), 0.5f);
+        }
+
         if (grounded && !dead)
         {
             grounded = false;
+            side = !side;
+            anim.SetBool("jumping", true);
+            anim.SetBool("walking", false);
+            playerModel.transform.DOScaleY(side?0.5f:-0.5f, 0f);
             xvelocity *= -1;
             vec = new Vector2(-xvelocity, yvelocity);
             vac = new Vector2(0, jumpforce);
             rb2D.velocity = new Vector2(-xvelocity, 0);
             rb2D.AddForce(vac);
-            aS.PlayOneShot(RandomJump);
+            aS2.PlayOneShot(RandomJump);
             salto.transform.localEulerAngles *= -1;
             salto.Play();
         }
@@ -97,6 +120,9 @@ public class Player : MonoBehaviour
         {
             dead = true;
             ChangePitchToNormal();
+            anim.SetBool("jumping", false);
+            anim.SetBool("walking", false);
+            anim.Play("Death");
             aS.PlayOneShot(player_death);
             uiManager.Gameover();
         }
@@ -123,6 +149,8 @@ public class Player : MonoBehaviour
     {
         if (other.transform.CompareTag("Wall"))
         {
+            anim.SetBool("jumping", false);
+            anim.SetBool("walking", true);
             grounded = true;
         }
     }

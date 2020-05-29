@@ -9,6 +9,16 @@
       <e p="Assets" t="Include">
         <e p="ControladorDeUI.cs" t="Include" />
         <e p="Fade.cs" t="Include" />
+        <e p="Hovl Studio" t="Include">
+          <e p="Procedural fire" t="Include">
+            <e p="Demo scene" t="Include">
+              <e p="readme.txt" t="Include" />
+            </e>
+            <e p="Shaders" t="Include">
+              <e p="FireSphere.shader" t="Include" />
+            </e>
+          </e>
+        </e>
         <e p="Plugins" t="Include">
           <e p="DOTween" t="Include">
             <e p="Modules" t="Include">
