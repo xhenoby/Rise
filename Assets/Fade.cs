@@ -1,22 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Fade : MonoBehaviour
 {
-    Animator anim;
-    void Start()
+    public void Rereset()
     {
-        anim = GetComponent<Animator>();
-        anim.SetBool("Fade",false);
-    }
-    public void Reset()
-    {
-        anim.SetBool("Fade", true);
+        GetComponent<Image>().DOColor(new Color(0, 0, 0, 1.0f), 0.5f);
+        Invoke("ResetScene", 1.0f);
     }
 
-    public void Rereset()
+    public void ResetScene()
     {
         Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.name);
